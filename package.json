@@ -1,6 +1,6 @@
 {
   "name": "havana-browser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A client-side request/response dispatcher",
   "main": "dist/browser.js",
   "scripts": {
@@ -25,8 +25,7 @@
   "license": "ISC",
   "dependencies": {
     "vdom-virtualize": "0.0.x",
-    "virtual-dom": "2.1.x",
-    "xmldom": "0.1.x"
+    "virtual-dom": "2.1.x"
   },
   "devDependencies": {
     "babel-eslint": "4.0.x",
@@ -38,6 +37,7 @@
     "havana-event": "0.1.x",
     "jsdom": "3.x",
     "simulate": "0.0.x",
-    "sinon": "1.15.x"
+    "sinon": "1.15.x",
+    "xmldom": "0.1.x"
   }
 }
