@@ -240,5 +240,4 @@ describe( 'Browser', () => {
       done();
     });
   });
-
 });
