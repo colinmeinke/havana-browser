@@ -1,0 +1,43 @@
+{
+  "name": "havana-browser",
+  "version": "0.1.0",
+  "description": "A client-side request/response dispatcher",
+  "main": "dist/browser.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "author": {
+    "name": "Colin Meinke",
+    "email": "hello@colinmeinke.com",
+    "url": "colinmeinke.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/colinmeinke/havana-browser.git"
+  },
+  "keywords": [
+    "browser",
+    "es2015",
+    "havana",
+    "request",
+    "response"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "vdom-virtualize": "0.0.x",
+    "virtual-dom": "2.1.x",
+    "xmldom": "0.1.x"
+  },
+  "devDependencies": {
+    "babel-eslint": "4.0.x",
+    "chai": "3.2.x",
+    "gulp": "3.9.x",
+    "gulp-babel": "5.1.x",
+    "gulp-eslint": "0.15.x",
+    "gulp-mocha": "2.1.x",
+    "havana-event": "0.1.x",
+    "jsdom": "3.x",
+    "simulate": "0.0.x",
+    "sinon": "1.15.x"
+  }
+}
