@@ -19,6 +19,7 @@
     "browser",
     "es2015",
     "havana",
+    "isomorphic",
     "request",
     "response"
   ],
