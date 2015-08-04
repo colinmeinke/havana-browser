@@ -24,10 +24,6 @@ var _simulate = require('simulate');
 
 var _simulate2 = _interopRequireDefault(_simulate);
 
-var _sinon = require('sinon');
-
-var _sinon2 = _interopRequireDefault(_sinon);
-
 var _xmldom = require('xmldom');
 
 var _xmldom2 = _interopRequireDefault(_xmldom);
@@ -60,129 +56,54 @@ describe('Browser', function () {
     });
   });
 
-  describe('listen()', function () {
-    it('should publish `request.listening` event', function (done) {
-      var spy = _sinon2['default'].spy();
+  describe('id', function () {
+    it('should be incremented on each request received', function (done) {
+      var id = null;
 
-      event.subscribe('request.listening', spy);
+      event.subscribe('request.received', function (data) {
+        expect(data.id).to.not.equal(id);
 
-      browser.listen();
+        if (id) {
+          done();
+        }
 
-      expect(spy.called).to.equal(true);
-
-      done();
-    });
-
-    it('should add click event listeners to links', function (done) {
-      var spy = _sinon2['default'].spy();
-
-      event.subscribe('request.received', spy);
+        id = data.id;
+      });
 
       browser.listen();
 
       _simulate2['default'].click(link);
-
-      expect(spy.called).to.equal(true);
-
-      done();
+      _simulate2['default'].click(link);
     });
   });
 
-  describe('request()', function () {
-    it('should create unique request id', function (done) {
-      var spy = _sinon2['default'].spy(function (data) {
-        return data.id;
+  describe('request.listening', function () {
+    it('should be published when browser is ready to dispatch', function (done) {
+      event.subscribe('request.listening', function () {
+        done();
       });
 
-      event.subscribe('request.received', spy);
-
       browser.listen();
-
-      _simulate2['default'].click(link);
-      _simulate2['default'].click(link);
-
-      expect(spy.returnValues[0]).to.not.equal(spy.returnValues[1]);
-
-      done();
-    });
-
-    it('should publish `request.received` event', function (done) {
-      var spy = _sinon2['default'].spy();
-
-      event.subscribe('request.received', spy);
-
-      browser.listen();
-
-      _simulate2['default'].click(link);
-
-      expect(spy.called).to.equal(true);
-
-      done();
     });
   });
 
-  describe('navigate()', function () {
-    it('should add new history entry', function (done) {
-      var path = window.location.pathname;
-
-      var spy = _sinon2['default'].spy(function () {
-        return window.location.pathname;
+  describe('request.received', function () {
+    it('should be published when browser receives a request', function (done) {
+      event.subscribe('request.received', function () {
+        done();
       });
-
-      event.subscribe('request.received', spy);
 
       browser.listen();
 
       _simulate2['default'].click(link);
-
-      expect(spy.returnValues[0]).not.to.equal(path);
-
-      done();
     });
   });
 
-  describe('response.handler.register()', function () {
-    it('should add new item to handlers array', function () {
-      event.publish('response.handler.register', {
-        'name': 'hello'
+  describe('response.error', function () {
+    it('should be published when all registered handlers have failed to handle a request', function (done) {
+      event.subscribe('response.error', function () {
+        done();
       });
-
-      expect(browser.handlers).to.include('hello');
-    });
-  });
-
-  describe('response.handler.error()', function () {
-    it('should increment `request.handlerErrors`', function (done) {
-      var spy = _sinon2['default'].spy(function (data) {
-        var request = browser.requests.get(data.id);
-
-        event.publish('response.handler.error', {
-          'id': data.id,
-          'name': 'hello'
-        });
-
-        return request.handlerErrors;
-      });
-
-      event.publish('response.handler.register', {
-        'name': 'hello'
-      });
-
-      event.subscribe('request.received', spy);
-
-      browser.listen();
-
-      _simulate2['default'].click(link);
-
-      expect(spy.returnValues[0]).to.equal(1);
-
-      done();
-    });
-
-    it('should publish `response.error` event', function (done) {
-      var spy = _sinon2['default'].spy();
-
-      event.subscribe('response.error', spy);
 
       event.publish('response.handler.register', {
         'name': 'hello'
@@ -198,58 +119,51 @@ describe('Browser', function () {
       browser.listen();
 
       _simulate2['default'].click(link);
-
-      expect(spy.called).to.equal(true);
-
-      done();
     });
   });
 
-  describe('response.send()', function () {
+  describe('response.send', function () {
     it('should patch the DOM', function (done) {
-      var spy = _sinon2['default'].spy(function (data) {
+      event.subscribe('request.received', function (data) {
         event.publish('response.send', {
           'id': data.id,
           'content': '<html>\n                        <body>\n                          <a href="/new-page">New page</a>\n                        </body>\n                      </html>'
         });
 
-        return document.documentElement.getElementsByTagName('a')[0];
+        expect(document.documentElement.getElementsByTagName('a')[0].getAttribute('href')).to.equal('/new-page');
+        done();
       });
-
-      event.subscribe('request.received', spy);
 
       browser.listen();
 
       _simulate2['default'].click(link);
-
-      expect(spy.returnValues[0].getAttribute('href')).to.equal('/new-page');
-
-      done();
     });
+  });
 
-    it('should delete element from requests map', function (done) {
-      var spy = _sinon2['default'].spy(function (data) {
-        event.publish('response.send', {
-          'id': data.id,
-          'content': '<html>\n                        <body>\n                          <a href="/new-page">New page</a>\n                        </body>\n                      </html>'
-        });
-
-        return browser.requests.get(data.id);
-      });
-
-      event.subscribe('request.received', spy);
-
-      event.publish('response.handler.register', {
-        'name': 'hello'
+  describe('addListeners()', function () {
+    it('should add click event listeners to links', function (done) {
+      event.subscribe('request.received', function () {
+        done();
       });
 
       browser.listen();
 
       _simulate2['default'].click(link);
+    });
+  });
 
-      expect(spy.returnValues[0]).to.equal(undefined);
+  describe('navigate()', function () {
+    it('should add new history entry', function (done) {
+      var path = window.location.pathname;
 
-      done();
+      event.subscribe('request.received', function () {
+        expect(window.location.pathname).not.to.equal(path);
+        done();
+      });
+
+      browser.listen();
+
+      _simulate2['default'].click(link);
     });
   });
 });
