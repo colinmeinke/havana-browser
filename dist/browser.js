@@ -22,18 +22,23 @@ var _vdomVirtualize = require('vdom-virtualize');
 
 var _vdomVirtualize2 = _interopRequireDefault(_vdomVirtualize);
 
+var _ = new WeakMap();
+
 var Browser = (function () {
   function Browser(config) {
     _classCallCheck(this, Browser);
 
-    this.event = config.event;
-    this.reporting = config.reporting;
+    var props = {
+      'event': config.event,
+      'handlers': [],
+      'id': 1,
+      'listeners': [],
+      'navigateRef': this.navigate.bind(this),
+      'reporting': config.reporting,
+      'requests': new Map()
+    };
 
-    this.handlers = [];
-    this.id = 1;
-    this.listeners = [];
-    this.navigateRef = this.navigate.bind(this);
-    this.requests = new Map();
+    _.set(this, props);
 
     this.init();
   }
@@ -43,23 +48,27 @@ var Browser = (function () {
     value: function init() {
       var _this = this;
 
-      this.event.subscribe('response.handler.register', function (data) {
-        _this.handlers.push(data.name);
+      var event = _.get(this).event;
+      var handlers = _.get(this).handlers;
+      var requests = _.get(this).requests;
+
+      event.subscribe('response.handler.register', function (data) {
+        handlers.push(data.name);
       });
 
-      this.event.subscribe('response.handler.error', function (data) {
-        var request = _this.requests.get(data.id);
+      event.subscribe('response.handler.error', function (data) {
+        var request = requests.get(data.id);
 
         if (request) {
           request.handlerErrors++;
 
-          if (request.handlerErrors === _this.handlers.length) {
-            _this.event.publish('response.error', data);
+          if (request.handlerErrors === handlers.length) {
+            event.publish('response.error', data);
           }
         }
       });
 
-      this.event.subscribe('response.send', function (data) {
+      event.subscribe('response.send', function (data) {
         if (data.content) {
           var content = new DOMParser().parseFromString(data.content, 'text/html');
           var currentTree = (0, _vdomVirtualize2['default'])(document.documentElement);
@@ -71,7 +80,7 @@ var Browser = (function () {
           _this.addListeners();
         }
 
-        _this.requests['delete'](data.id);
+        requests['delete'](data.id);
       });
 
       window.addEventListener('popstate', function () {
@@ -81,26 +90,30 @@ var Browser = (function () {
   }, {
     key: 'listen',
     value: function listen() {
+      var event = _.get(this).event;
+      var reporting = _.get(this).reporting;
+
       this.addListeners();
 
-      if (this.reporting.level > 0) {
-        this.reporting.reporter('-- Listening for requests in the browser');
+      if (reporting.level > 0) {
+        reporting.reporter('-- Listening for requests in the browser');
       }
 
-      this.event.publish('request.listening', {
+      event.publish('request.listening', {
         'location': 'browser'
       });
     }
   }, {
     key: 'removeListeners',
     value: function removeListeners() {
-      var _this2 = this;
+      var listeners = _.get(this).listeners;
+      var navigateRef = _.get(this).navigateRef;
 
-      this.listeners.forEach(function (listener) {
-        listener.removeEventListener('click', _this2.navigateRef);
+      listeners.forEach(function (listener) {
+        listener.removeEventListener('click', navigateRef);
       });
 
-      this.listeners = [];
+      _.get(this).listeners = [];
     }
   }, {
     key: 'addListeners',
@@ -109,11 +122,14 @@ var Browser = (function () {
 
       var links = document.getElementsByTagName('a');
       var l = links.length;
+      var listeners = _.get(this).listeners;
+      var navigateRef = _.get(this).navigateRef;
+
       var i = 0;
 
       for (; i < l; i++) {
-        this.listeners.push(links[i]);
-        links[i].addEventListener('click', this.navigateRef);
+        listeners.push(links[i]);
+        links[i].addEventListener('click', navigateRef);
       }
     }
   }, {
@@ -130,17 +146,20 @@ var Browser = (function () {
   }, {
     key: 'request',
     value: function request(url) {
-      var id = this.id++;
+      var event = _.get(this).event;
+      var id = _.get(this).id++;
+      var reporting = _.get(this).reporting;
+      var requests = _.get(this).requests;
 
-      this.requests.set(id, {
+      requests.set(id, {
         'handlerErrors': 0
       });
 
-      if (this.reporting.level > 0) {
-        this.reporting.reporter('-- GET request received: ' + url);
+      if (reporting.level > 0) {
+        reporting.reporter('-- GET request received: ' + url);
       }
 
-      this.event.publish('request.received', {
+      event.publish('request.received', {
         'id': id,
         'time': Date.now(),
         'method': 'GET',

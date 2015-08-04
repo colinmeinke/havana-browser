@@ -1,6 +1,6 @@
 /* global describe beforeEach it */
 
-import Browser from '../../dist/browser';
+import Browser from '../../dist/browser.with-polyfill';
 import chai from 'chai';
 import Event from 'havana-event';
 import jsdom from 'jsdom';
@@ -39,7 +39,29 @@ describe( 'Browser', () => {
     });
   });
 
+  describe( '_', () => {
+    it( 'should be private', () => {
+      expect( browser ).to.not.have.property( '_' );
+    });
+  });
+
+  describe( 'event', () => {
+    it( 'should be private', () => {
+      expect( browser ).to.not.have.property( 'event' );
+    });
+  });
+
+  describe( 'handlers', () => {
+    it( 'should be private', () => {
+      expect( browser ).to.not.have.property( 'handlers' );
+    });
+  });
+
   describe( 'id', () => {
+    it( 'should be private', () => {
+      expect( browser ).to.not.have.property( 'id' );
+    });
+
     it( 'should be incremented on each request received', done => {
       let id = null;
 
@@ -57,6 +79,30 @@ describe( 'Browser', () => {
 
       simulate.click( link );
       simulate.click( link );
+    });
+  });
+
+  describe( 'listeners', () => {
+    it( 'should be private', () => {
+      expect( browser ).to.not.have.property( 'listeners' );
+    });
+  });
+
+  describe( 'navigateRef', () => {
+    it( 'should be private', () => {
+      expect( browser ).to.not.have.property( 'navigateRef' );
+    });
+  });
+
+  describe( 'reporting', () => {
+    it( 'should be private', () => {
+      expect( browser ).to.not.have.property( 'reporting' );
+    });
+  });
+
+  describe( 'requests', () => {
+    it( 'should be private', () => {
+      expect( browser ).to.not.have.property( 'requests' );
     });
   });
 

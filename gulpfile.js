@@ -1,4 +1,5 @@
 var babel = require( 'gulp-babel' );
+var concat = require( 'gulp-concat' );
 var gulp = require( 'gulp' );
 var lint = require( 'gulp-eslint' );
 var mocha = require( 'gulp-mocha' );
@@ -27,9 +28,18 @@ gulp.task( 'compileTests', [ 'lint' ], function () {
 
 gulp.task( 'compile', [ 'compileCore', 'compileTests' ]);
 
+gulp.task( 'polyfill', [ 'compile' ], function () {
+  return gulp.src([
+    './node_modules/gulp-babel/node_modules/babel-core/browser-polyfill.js',
+    './dist/browser.js',
+  ])
+  .pipe( concat( 'browser.with-polyfill.js' ))
+  .pipe( gulp.dest( './dist' ));
+});
+
 gulp.task( 'test', function () {
   return gulp.src( './test/dist/**/*.js' )
     .pipe( mocha());
 });
 
-gulp.task( 'default', [ 'lint', 'compile', 'test' ]);
+gulp.task( 'default', [ 'lint', 'compile', 'polyfill', 'test' ]);

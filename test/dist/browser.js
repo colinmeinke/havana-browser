@@ -4,9 +4,9 @@
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _distBrowser = require('../../dist/browser');
+var _distBrowserWithPolyfill = require('../../dist/browser.with-polyfill');
 
-var _distBrowser2 = _interopRequireDefault(_distBrowser);
+var _distBrowserWithPolyfill2 = _interopRequireDefault(_distBrowserWithPolyfill);
 
 var _chai = require('chai');
 
@@ -47,7 +47,7 @@ describe('Browser', function () {
 
     event = new _havanaEvent2['default']();
 
-    browser = new _distBrowser2['default']({
+    browser = new _distBrowserWithPolyfill2['default']({
       'event': event,
       'reporting': {
         'reporter': console.log.bind(console),
@@ -56,7 +56,29 @@ describe('Browser', function () {
     });
   });
 
+  describe('_', function () {
+    it('should be private', function () {
+      expect(browser).to.not.have.property('_');
+    });
+  });
+
+  describe('event', function () {
+    it('should be private', function () {
+      expect(browser).to.not.have.property('event');
+    });
+  });
+
+  describe('handlers', function () {
+    it('should be private', function () {
+      expect(browser).to.not.have.property('handlers');
+    });
+  });
+
   describe('id', function () {
+    it('should be private', function () {
+      expect(browser).to.not.have.property('id');
+    });
+
     it('should be incremented on each request received', function (done) {
       var id = null;
 
@@ -74,6 +96,30 @@ describe('Browser', function () {
 
       _simulate2['default'].click(link);
       _simulate2['default'].click(link);
+    });
+  });
+
+  describe('listeners', function () {
+    it('should be private', function () {
+      expect(browser).to.not.have.property('listeners');
+    });
+  });
+
+  describe('navigateRef', function () {
+    it('should be private', function () {
+      expect(browser).to.not.have.property('navigateRef');
+    });
+  });
+
+  describe('reporting', function () {
+    it('should be private', function () {
+      expect(browser).to.not.have.property('reporting');
+    });
+  });
+
+  describe('requests', function () {
+    it('should be private', function () {
+      expect(browser).to.not.have.property('requests');
     });
   });
 

@@ -26,8 +26,8 @@ import Event from 'havana-event';
 const event = new Event();
 
 const reporting = {
+  'level': 2,
   'reporter': console.log.bind( console ),
-  'level': 2, 
 };
 
 const browser = new Browser({
@@ -75,3 +75,9 @@ Havana browser is written using ES2015+ syntax.
 However, by default this module will use an ES5
 compatible file that has been compiled using
 [Babel](https://babeljs.io).
+
+Havana browser currently requires the 
+[Babel polyfill](https://babeljs.io/docs/usage/polyfill).
+In the `dist` directory there are two files, the default
+`browser.js` and `browser.with-polyfill.js` that includes
+the Babel browser polyfill.
