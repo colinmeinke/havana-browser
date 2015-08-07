@@ -1,6 +1,6 @@
 {
   "name": "havana-browser",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A client-side request/response dispatcher",
   "main": "dist/browser.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "isomorphic",
     "request",
     "response",
-    "universal",
+    "universal"
   ],
   "license": "ISC",
   "dependencies": {
