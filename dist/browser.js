@@ -48,9 +48,11 @@ var Browser = (function () {
     value: function init() {
       var _this = this;
 
-      var event = _.get(this).event;
-      var handlers = _.get(this).handlers;
-      var requests = _.get(this).requests;
+      var _$get = _.get(this);
+
+      var event = _$get.event;
+      var handlers = _$get.handlers;
+      var requests = _$get.requests;
 
       event.subscribe('response.handler.register', function (data) {
         handlers.push(data.name);
@@ -90,8 +92,10 @@ var Browser = (function () {
   }, {
     key: 'listen',
     value: function listen() {
-      var event = _.get(this).event;
-      var reporting = _.get(this).reporting;
+      var _$get2 = _.get(this);
+
+      var event = _$get2.event;
+      var reporting = _$get2.reporting;
 
       this.addListeners();
 
@@ -106,8 +110,10 @@ var Browser = (function () {
   }, {
     key: 'removeListeners',
     value: function removeListeners() {
-      var listeners = _.get(this).listeners;
-      var navigateRef = _.get(this).navigateRef;
+      var _$get3 = _.get(this);
+
+      var listeners = _$get3.listeners;
+      var navigateRef = _$get3.navigateRef;
 
       listeners.forEach(function (listener) {
         listener.removeEventListener('click', navigateRef);
@@ -122,8 +128,11 @@ var Browser = (function () {
 
       var links = document.getElementsByTagName('a');
       var l = links.length;
-      var listeners = _.get(this).listeners;
-      var navigateRef = _.get(this).navigateRef;
+
+      var _$get4 = _.get(this);
+
+      var listeners = _$get4.listeners;
+      var navigateRef = _$get4.navigateRef;
 
       var i = 0;
 
@@ -146,10 +155,13 @@ var Browser = (function () {
   }, {
     key: 'request',
     value: function request(url) {
-      var event = _.get(this).event;
+      var _$get5 = _.get(this);
+
+      var event = _$get5.event;
+      var reporting = _$get5.reporting;
+      var requests = _$get5.requests;
+
       var id = _.get(this).id++;
-      var reporting = _.get(this).reporting;
-      var requests = _.get(this).requests;
 
       requests.set(id, {
         'handlerErrors': 0
