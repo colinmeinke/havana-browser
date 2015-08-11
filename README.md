@@ -1,6 +1,8 @@
 # Havana browser
 
+[![NPM version](https://badge.fury.io/js/havana-browser.svg)](http://badge.fury.io/js/havana-browser)
 [![Build Status](https://travis-ci.org/colinmeinke/havana-browser.svg?branch=master)](https://travis-ci.org/colinmeinke/havana-browser)
+[![Dependency status](https://david-dm.org/colinmeinke/havana-browser.svg)](https://david-dm.org/colinmeinke/havana-browser.svg)
 
 A client-side request/response dispatcher.
 
