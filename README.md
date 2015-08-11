@@ -79,8 +79,11 @@ However, by default this module will use an ES5
 compatible file that has been compiled using
 [Babel](https://babeljs.io).
 
+In the `dist` directory there are two files, the default
+is `browser.js`.
+
 Havana browser currently requires the 
 [Babel polyfill](https://babeljs.io/docs/usage/polyfill).
-In the `dist` directory there are two files, the default
-`browser.js` and `browser.with-polyfill.js` that includes
-the Babel browser polyfill.
+You are expected to supply this yourself. However, as a
+courtesy you will also find `browser.with-polyfill.js` in the
+`dist` directory.

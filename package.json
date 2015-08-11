@@ -1,6 +1,6 @@
 {
   "name": "havana-browser",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A client-side request/response dispatcher",
   "main": "dist/browser.js",
   "scripts": {
@@ -32,15 +32,19 @@
   },
   "devDependencies": {
     "babel-eslint": "4.0.x",
+    "babelify": "6.1.x",
+    "browserify": "11.0.x",
     "chai": "3.2.x",
     "gulp": "3.9.x",
     "gulp-babel": "5.1.x",
     "gulp-concat": "2.6.x",
+    "gulp-derequire": "2.1.x",
     "gulp-eslint": "0.15.x",
     "gulp-mocha": "2.1.x",
     "havana-event": "0.1.x",
     "jsdom": "3.x",
     "simulate": "0.0.x",
+    "vinyl-source-stream": "1.1.x",
     "xmldom": "0.1.x"
   }
 }

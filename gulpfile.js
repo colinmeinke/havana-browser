@@ -1,8 +1,12 @@
 var babel = require( 'gulp-babel' );
+var babelify = require( 'babelify' );
+var browserify = require( 'browserify' );
 var concat = require( 'gulp-concat' );
+var derequire = require( 'gulp-derequire' );
 var gulp = require( 'gulp' );
 var lint = require( 'gulp-eslint' );
 var mocha = require( 'gulp-mocha' );
+var source = require( 'vinyl-source-stream' );
 
 gulp.task( 'lint', function () {
   return gulp.src([
@@ -15,8 +19,14 @@ gulp.task( 'lint', function () {
 });
 
 gulp.task( 'compileCore', [ 'lint' ], function () {
-  return gulp.src([ './lib/**/*.js' ])
-    .pipe( babel())
+  return browserify({
+    'entries': './lib/browser.js',
+    'standalone': 'havana-browser',
+  })
+    .transform( babelify )
+    .bundle()
+    .pipe( source( 'browser.js' ))
+    .pipe( derequire())
     .pipe( gulp.dest( './dist' ));
 });
 
@@ -42,4 +52,4 @@ gulp.task( 'test', function () {
     .pipe( mocha());
 });
 
-gulp.task( 'default', [ 'lint', 'compile', 'polyfill', 'test' ]);
+gulp.task( 'default', [ 'compile', 'polyfill' ]);
